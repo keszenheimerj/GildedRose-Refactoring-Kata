@@ -1,26 +1,28 @@
 # -*- coding: utf-8 -*-
 
 
-
-
 class GildedRose(object):
-
     def __init__(self, items):
         self.items = items
 
     def update_quality(self):
         for item in self.items:
-            category = self.categorize(item)
-            self.updateOneItem(item, category)
+            category = self.categorize()
+            category.updateOneItem(item)
 
-    def categorize(self, Item):
+    def categorize(item):
         return ItemCategory()
 
-    def updateOneItem(self, item, category):
-        self.updateQuality(item)
-        self.updateSellIn(item)
-        if item.sell_in < 0:
-            self.updateExpired(item)
+
+class ItemCategory:
+
+    def incrementQuality(self, item):
+        if item.quality < 50:
+            item.quality = item.quality + 1
+
+    def decrementQuality(self, item):
+        if item.quality > 0:
+            item.quality = item.quality - 1
 
     def updateExpired(self, item):
         if item.name == "Aged Brie":
@@ -51,13 +53,14 @@ class GildedRose(object):
         else:
             self.decrementQuality(item)
 
-    def incrementQuality(self, item):
-        if item.quality < 50:
-            item.quality = item.quality + 1
+    def updateOneItem(self, item):
+        self.updateQuality(item)
 
-    def decrementQuality(self, item):
-        if item.quality > 0:
-            item.quality = item.quality - 1
+        self.updateSellIn(item)
+
+        if item.sell_in < 0:
+            self.updateExpired(item)
+
 
 class Item:
     def __init__(self, name, sell_in, quality):
@@ -67,5 +70,3 @@ class Item:
 
     def __repr__(self):
         return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
-class ItemCategory():
-    pass
